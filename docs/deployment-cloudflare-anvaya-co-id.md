@@ -253,3 +253,211 @@ The demo backend is ported to Cloudflare Pages Functions, but durable lead captu
 The `www` redirect depends on `www.anvaya.co.id` being attached to the same Pages project or on an explicit Cloudflare Redirect Rule.
 
 DNS migration timing depends on JagoanHosting, the registry, recursive resolver caches, and Cloudflare zone activation.
+
+## Final Custom Domain Configuration Run
+
+Timestamp:
+
+```text
+2026-06-16T20:04:36+07:00
+```
+
+The existing deployment commit was pushed first:
+
+```bash
+git push origin main
+```
+
+Result:
+
+```text
+3c96837..47a9ce7 main -> main
+```
+
+Cloudflare auth was verified with:
+
+```bash
+npx wrangler whoami
+npx wrangler pages project list
+```
+
+Wrangler was logged in and the account contained the Pages project:
+
+```text
+Account ID: 342c1fcded8ba001d35a7ad0654144ab
+Project: anvaya-landing-page
+Project URL: https://anvaya-landing-page.pages.dev
+```
+
+`CLOUDFLARE_API_TOKEN` was not already exported, so a token was supplied only as an in-memory environment value for API calls. The token value was not printed, written to disk, or committed.
+
+Read-only API checks performed:
+
+```text
+GET /client/v4/zones?name=anvaya.co.id
+GET /client/v4/accounts/342c1fcded8ba001d35a7ad0654144ab/pages/projects/anvaya-landing-page
+GET /client/v4/accounts/342c1fcded8ba001d35a7ad0654144ab/pages/projects/anvaya-landing-page/domains
+GET /client/v4/zones/70438088e0f1387d4f05eaa71fce7971/dns_records?name=anvaya.co.id
+GET /client/v4/zones/70438088e0f1387d4f05eaa71fce7971/dns_records?name=www.anvaya.co.id
+```
+
+Resolved Cloudflare IDs:
+
+```text
+Zone ID: 70438088e0f1387d4f05eaa71fce7971
+Account ID: 342c1fcded8ba001d35a7ad0654144ab
+Zone status after changes: pending
+```
+
+DNS records deleted:
+
+```text
+Deleted A     anvaya.co.id     103.163.138.39
+Deleted CNAME www.anvaya.co.id anvaya.co.id
+```
+
+DNS records intentionally preserved:
+
+```text
+Preserved MX anvaya.co.id anvaya.co.id
+```
+
+No MX, TXT, CAA, NS, email-related records, or unrelated subdomains were deleted.
+
+Custom domains attached to the Pages project:
+
+```text
+POST /client/v4/accounts/342c1fcded8ba001d35a7ad0654144ab/pages/projects/anvaya-landing-page/domains {"name":"anvaya.co.id"}
+POST /client/v4/accounts/342c1fcded8ba001d35a7ad0654144ab/pages/projects/anvaya-landing-page/domains {"name":"www.anvaya.co.id"}
+```
+
+DNS records created after confirming no same-name A/AAAA/CNAME conflicts remained:
+
+```text
+Created CNAME anvaya.co.id     anvaya-landing-page.pages.dev proxied=true
+Created CNAME www.anvaya.co.id anvaya-landing-page.pages.dev proxied=true
+```
+
+Final Cloudflare DNS records for the two hostnames:
+
+```text
+anvaya.co.id:
+  CNAME anvaya.co.id anvaya-landing-page.pages.dev proxied=true
+  MX    anvaya.co.id anvaya.co.id priority=0
+
+www.anvaya.co.id:
+  CNAME www.anvaya.co.id anvaya-landing-page.pages.dev proxied=true
+```
+
+Pages custom-domain status after the run:
+
+```text
+anvaya.co.id     pending
+www.anvaya.co.id active
+```
+
+The zone activation check endpoint was attempted:
+
+```text
+PUT /client/v4/zones/70438088e0f1387d4f05eaa71fce7971/activation_check
+```
+
+It failed with:
+
+```text
+HTTP status: 403
+Cloudflare error code: 9109
+Cloudflare error message: Unauthorized to access requested resource
+```
+
+Verification commands and outputs:
+
+```bash
+dig +short NS anvaya.co.id
+```
+
+```text
+rommy.ns.cloudflare.com.
+margot.ns.cloudflare.com.
+```
+
+```bash
+dig +short A anvaya.co.id
+```
+
+```text
+172.66.44.217
+172.66.47.39
+```
+
+```bash
+dig +short CNAME www.anvaya.co.id
+```
+
+```text
+anvaya-landing-page.pages.dev.
+```
+
+```bash
+curl -I https://www.anvaya.co.id
+```
+
+```text
+HTTP/2 200
+server: cloudflare
+```
+
+The apex host and apex demo route still failed during TLS while Cloudflare reported the apex custom domain as pending:
+
+```bash
+curl -I https://anvaya.co.id
+curl -I https://anvaya.co.id/demo
+curl -sS -X POST https://anvaya.co.id/api/demo \
+  -H 'content-type: application/json' \
+  --data '{"name":"Test User","email":"test@example.com","company":"Example Co"}'
+```
+
+Observed result:
+
+```text
+curl: (35) OpenSSL/3.0.13: error:0A000410:SSL routines::sslv3 alert handshake failure
+```
+
+Additional delegation check:
+
+```bash
+dig +trace NS anvaya.co.id
+```
+
+The parent `co.id` delegation still included old JagoanHosting nameservers alongside Cloudflare:
+
+```text
+anvaya.co.id. 3600 IN NS ns1.jagoanhosting.com.
+anvaya.co.id. 3600 IN NS ns2.jagoanhosting.com.
+anvaya.co.id. 3600 IN NS rommy.ns.cloudflare.com.
+anvaya.co.id. 3600 IN NS margot.ns.cloudflare.com.
+```
+
+Remaining owner action:
+
+```text
+In JagoanHosting domain nameserver settings, remove:
+ns1.jagoanhosting.com
+ns2.jagoanhosting.com
+
+Keep only:
+rommy.ns.cloudflare.com
+margot.ns.cloudflare.com
+```
+
+After the registrar delegation contains only Cloudflare nameservers, wait for Cloudflare zone activation and Pages certificate issuance, then rerun:
+
+```bash
+dig +trace NS anvaya.co.id
+curl -I https://anvaya.co.id
+curl -I https://www.anvaya.co.id
+curl -I https://anvaya.co.id/demo
+curl -sS -X POST https://anvaya.co.id/api/demo \
+  -H 'content-type: application/json' \
+  --data '{"name":"Test User","email":"test@example.com","company":"Example Co"}'
+```
