@@ -188,6 +188,12 @@ It performs these steps:
 6. Uploads `dist/` as the Pages artifact.
 7. Deploys the artifact with `actions/deploy-pages@v4`.
 
+The workflow sets `enablement: true` on `actions/configure-pages@v5`. The first run failed before this was added because GitHub Pages was not enabled yet:
+
+```text
+Get Pages site failed. Please verify that the repository has Pages enabled and configured to build using GitHub Actions, or consider exploring the enablement parameter for this action.
+```
+
 ## GitHub Pages Settings
 
 For this workflow-based Pages deployment, the repository should be configured as:
@@ -223,7 +229,7 @@ During this local deployment setup, `gh` was not available in the terminal:
 /bin/bash: line 1: gh: command not found
 ```
 
-Because of that, GitHub Pages source and custom domain settings could not be changed from this environment. Use the manual settings path above, or install/authenticate GitHub CLI and rerun the commands.
+Because of that, GitHub Pages source and custom domain settings could not be changed from this environment through `gh`. The workflow now attempts Pages enablement through `actions/configure-pages@v5`. If that still fails, use the manual settings path above, or install/authenticate GitHub CLI and rerun the commands.
 
 If the CLI/API fails because of permissions or an existing Pages configuration, use the manual settings path above.
 
@@ -333,10 +339,11 @@ Generated dist/demo/index.html redirect: present
 Generated dist/api/: intentionally absent because api/demo.js is Vercel serverless code
 Secret scan of dist/: no Cloudflare, Resend, webhook, bearer-token, or private-key patterns found
 GitHub CLI auth/admin check: not completed because gh is not installed
-GitHub Pages source configuration: manual action required unless configured elsewhere
+First GitHub Actions run: failed at Configure Pages because Pages was not enabled
+GitHub Pages source configuration: workflow retry pending after enabling actions/configure-pages enablement=true
 GitHub Pages custom domain configuration: manual action required unless configured elsewhere
 Cloudflare DNS configuration: manual action required because CLOUDFLARE_API_TOKEN and CLOUDFLARE_ZONE_ID were not set
-GitHub Actions deployment: pending push and remote workflow run
+GitHub Actions deployment: pending workflow retry
 Production URL: pending
 ```
 
