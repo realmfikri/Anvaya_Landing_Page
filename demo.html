@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request a Demo · Anvaya</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="assets/anvaya-icon.png">
+<style>
+  .demo-wrap{position:relative;z-index:5;min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;padding:96px 20px 64px;}
+  .demo-back{position:fixed;top:22px;left:24px;z-index:60;display:flex;align-items:center;gap:11px;}
+  .demo-back img{height:32px;width:auto;}
+  .demo-back .word{font-weight:700;font-size:20px;letter-spacing:-.01em;color:var(--word,#CBC3BD);}
+  .demo-card{width:100%;max-width:560px;background:var(--panel);backdrop-filter:blur(16px);
+    border:1px solid var(--line-2);border-radius:24px;padding:40px 38px 34px;
+    box-shadow:0 40px 100px -40px rgba(0,0,0,.9);}
+  .demo-card .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+  .demo-card .eyebrow .d{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);}
+  .demo-card h1{font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-.02em;line-height:1.06;color:var(--ink-0);text-wrap:balance;}
+  .demo-card .lede{margin-top:12px;font-size:15px;color:var(--ink-1);line-height:1.6;}
+  form{margin-top:26px;display:grid;gap:16px;}
+  .row{display:grid;gap:16px;grid-template-columns:1fr 1fr;}
+  .field{display:flex;flex-direction:column;gap:7px;}
+  .field.full{grid-column:1 / -1;}
+  label{font-size:12px;font-weight:600;color:var(--ink-2);letter-spacing:.02em;}
+  label .req{color:var(--red);}
+  input,select,textarea{font-family:var(--font);font-size:15px;font-weight:500;color:var(--ink-0);
+    background:var(--bg-1);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;
+    transition:border-color .2s,box-shadow .2s;width:100%;}
+  textarea{resize:vertical;min-height:92px;line-height:1.5;}
+  input::placeholder,textarea::placeholder{color:var(--ink-3);}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(230,73,61,.18);}
+  select{appearance:none;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238C7E78' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;}
+  .btn-submit{margin-top:6px;font-family:var(--font);font-weight:600;font-size:15.5px;cursor:pointer;
+    border:none;border-radius:999px;padding:14px 22px;background:var(--red);color:#FBEDE9;
+    box-shadow:0 0 0 1px rgba(230,96,84,.4),0 10px 38px -8px rgba(230,96,84,.6);
+    transition:transform .18s var(--ease),background .25s,box-shadow .25s;
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;}
+  .btn-submit:hover{background:var(--red-bright);}
+  .btn-submit:active{transform:translateY(1px) scale(.99);}
+  .btn-submit:disabled{opacity:.6;cursor:not-allowed;}
+  .form-note{font-size:12px;color:var(--ink-3);text-align:center;line-height:1.5;}
+  .form-msg{font-size:13.5px;border-radius:12px;padding:11px 14px;line-height:1.5;display:none;}
+  .form-msg.err{display:block;color:#F8C6BF;background:rgba(230,73,61,.12);border:1px solid rgba(230,73,61,.35);}
+  /* success state */
+  .demo-success{display:none;text-align:center;}
+  .demo-success.show{display:block;}
+  .demo-success .tick{width:62px;height:62px;border-radius:50%;margin:0 auto 22px;display:grid;place-items:center;
+    background:rgba(227,168,87,.12);box-shadow:inset 0 0 0 1.5px var(--gold);}
+  .demo-success .tick svg{width:30px;height:30px;stroke:var(--gold);}
+  .demo-success h2{font-size:26px;font-weight:700;letter-spacing:-.02em;color:var(--ink-0);}
+  .demo-success p{margin-top:12px;font-size:15px;color:var(--ink-1);line-height:1.6;}
+  .demo-success a{display:inline-block;margin-top:24px;font-size:14.5px;font-weight:600;color:var(--red);}
+  @media(max-width:520px){
+    .row{grid-template-columns:1fr;}
+    .demo-card{padding:32px 22px 28px;}
+  }
+</style>
+</head>
+<body>
+<div class="bg-field"></div>
+<div class="grid-lines"></div>
+<div id="contours"></div>
+
+<a class="demo-back" href="index.html">
+  <img src="assets/anvaya-icon.png" alt="Anvaya">
+  <span class="word">Anvaya</span>
+</a>
+
+<main class="demo-wrap">
+  <div class="demo-card">
+    <!-- FORM -->
+    <div id="form-view">
+      <span class="eyebrow"><span class="d"></span>Request a demo</span>
+      <h1>Put agents to work in your organization</h1>
+      <p class="lede">Tell us a little about your team and what you'd like to automate. We'll be in touch to set up a tailored walkthrough.</p>
+
+      <form id="demo-form" novalidate>
+        <div class="form-msg" id="form-error"></div>
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
+        <div class="row">
+          <div class="field">
+            <label for="name">Full name <span class="req">*</span></label>
+            <input id="name" name="name" type="text" autocomplete="name" placeholder="Dewi Rangga" required>
+          </div>
+          <div class="field">
+            <label for="email">Work email <span class="req">*</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="dewi@company.co.id" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="company">Company <span class="req">*</span></label>
+            <input id="company" name="company" type="text" autocomplete="organization" placeholder="PT Nusantara" required>
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+62 ...">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="team">Team size</label>
+            <select id="team" name="team">
+              <option value="">Select…</option>
+              <option>1–50</option>
+              <option>51–200</option>
+              <option>201–1,000</option>
+              <option>1,000+</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="area">Primary interest</label>
+            <select id="area" name="area">
+              <option value="">Select…</option>
+              <option>AIN People (HR)</option>
+              <option>AIN Finance</option>
+              <option>AIN Legal</option>
+              <option>AIN IoT</option>
+              <option>AIN Consulting</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="message">What would you like to automate?</label>
+          <textarea id="message" name="message" placeholder="A few words on the work you'd like agents to take on."></textarea>
+        </div>
+        <button class="btn-submit" type="submit" id="submit-btn">
+          <span class="btn-label">Request a Demo</span>
+          <svg class="arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="form-note">We'll only use your details to contact you about Anvaya. No spam.</p>
+      </form>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="demo-success" id="success-view">
+      <div class="tick">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h2>Thank you — request received</h2>
+      <p>We've logged your request and our team will reach out shortly to arrange your walkthrough.</p>
+      <a href="index.html">← Back to home</a>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  const form = document.getElementById('demo-form');
+  const btn = document.getElementById('submit-btn');
+  const label = btn.querySelector('.btn-label');
+  const errBox = document.getElementById('form-error');
+
+  function showError(msg){ errBox.textContent = msg; errBox.classList.add('err'); errBox.style.display='block'; }
+  function clearError(){ errBox.style.display='none'; }
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    clearError();
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    if(!data.name || !data.email || !data.company){
+      showError('Please fill in your name, work email, and company.');
+      return;
+    }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)){
+      showError('Please enter a valid email address.');
+      return;
+    }
+
+    data.page = location.href;
+    data.submittedAt = new Date().toISOString();
+
+    btn.disabled = true;
+    label.textContent = 'Sending…';
+
+    try{
+      const res = await fetch('/api/demo', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(data)
+      });
+      if(!res.ok){
+        const j = await res.json().catch(()=>({}));
+        throw new Error(j.error || ('Request failed ('+res.status+')'));
+      }
+      document.getElementById('form-view').style.display='none';
+      document.getElementById('success-view').classList.add('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }catch(err){
+      showError(err.message || 'Something went wrong. Please try again or email us directly.');
+      btn.disabled = false;
+      label.textContent = 'Request a Demo';
+    }
+  });
+})();
+</script>
+<script src="contours.js"></script>
+</body>
+</html>
