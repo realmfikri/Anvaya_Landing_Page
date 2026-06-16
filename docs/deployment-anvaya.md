@@ -194,6 +194,14 @@ The workflow sets `enablement: true` on `actions/configure-pages@v5`. The first 
 Get Pages site failed. Please verify that the repository has Pages enabled and configured to build using GitHub Actions, or consider exploring the enablement parameter for this action.
 ```
 
+After `enablement: true` was added, the retry still failed because the workflow token could not create the Pages site:
+
+```text
+Create Pages site failed. Error: Resource not accessible by integration
+```
+
+That means a repository admin must enable GitHub Pages manually, or use an authenticated GitHub CLI/session with sufficient admin rights.
+
 ## GitHub Pages Settings
 
 For this workflow-based Pages deployment, the repository should be configured as:
@@ -229,7 +237,13 @@ During this local deployment setup, `gh` was not available in the terminal:
 /bin/bash: line 1: gh: command not found
 ```
 
-Because of that, GitHub Pages source and custom domain settings could not be changed from this environment through `gh`. The workflow now attempts Pages enablement through `actions/configure-pages@v5`. If that still fails, use the manual settings path above, or install/authenticate GitHub CLI and rerun the commands.
+Because of that, GitHub Pages source and custom domain settings could not be changed from this environment through `gh`. The workflow attempted Pages enablement through `actions/configure-pages@v5`, but GitHub rejected creation with:
+
+```text
+Resource not accessible by integration
+```
+
+Use the manual settings path above, or install/authenticate GitHub CLI and rerun the commands with an account that has repository admin access.
 
 If the CLI/API fails because of permissions or an existing Pages configuration, use the manual settings path above.
 
@@ -340,11 +354,15 @@ Generated dist/api/: intentionally absent because api/demo.js is Vercel serverle
 Secret scan of dist/: no Cloudflare, Resend, webhook, bearer-token, or private-key patterns found
 GitHub CLI auth/admin check: not completed because gh is not installed
 First GitHub Actions run: failed at Configure Pages because Pages was not enabled
-GitHub Pages source configuration: workflow retry pending after enabling actions/configure-pages enablement=true
+Second GitHub Actions run: failed at Configure Pages because the workflow token could not create the Pages site
+GitHub Pages API check: 404 Not Found, meaning Pages is not enabled/created for this repository yet
+GitHub Pages source configuration: manual repo-admin action required
 GitHub Pages custom domain configuration: manual action required unless configured elsewhere
 Cloudflare DNS configuration: manual action required because CLOUDFLARE_API_TOKEN and CLOUDFLARE_ZONE_ID were not set
-GitHub Actions deployment: pending workflow retry
-Production URL: pending
+Cloudflare DNS lookup for anvaya.muhamadfikri.com: no CNAME returned
+Production curl checks: failed with "Could not resolve host: anvaya.muhamadfikri.com"
+GitHub Actions deployment: failed before artifact upload because Pages is not enabled
+Production URL: not live yet
 ```
 
 ## Troubleshooting
