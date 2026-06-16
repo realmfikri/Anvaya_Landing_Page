@@ -461,3 +461,105 @@ curl -sS -X POST https://anvaya.co.id/api/demo \
   -H 'content-type: application/json' \
   --data '{"name":"Test User","email":"test@example.com","company":"Example Co"}'
 ```
+
+### Final Activation Verification
+
+Timestamp:
+
+```text
+2026-06-16T20:18:29+07:00
+```
+
+The registrar delegation was rechecked after removing the old JagoanHosting nameservers. The parent delegation now returns only Cloudflare nameservers:
+
+```bash
+dig +trace NS anvaya.co.id
+```
+
+```text
+anvaya.co.id. 3600 IN NS margot.ns.cloudflare.com.
+anvaya.co.id. 3600 IN NS rommy.ns.cloudflare.com.
+```
+
+Recursive DNS verification:
+
+```bash
+dig +short NS anvaya.co.id
+dig +short A anvaya.co.id
+```
+
+```text
+rommy.ns.cloudflare.com.
+margot.ns.cloudflare.com.
+
+172.67.155.108
+104.21.90.96
+```
+
+Because the Pages DNS records are proxied, public resolvers return Cloudflare anycast A records for `www` instead of exposing the underlying Pages CNAME:
+
+```bash
+dig +short CNAME www.anvaya.co.id @1.1.1.1
+dig +short A www.anvaya.co.id @1.1.1.1
+dig +short A www.anvaya.co.id @8.8.8.8
+```
+
+```text
+104.21.90.96
+172.67.155.108
+
+104.21.90.96
+172.67.155.108
+```
+
+Authoritative Cloudflare DNS also returns Cloudflare anycast A records for `www`:
+
+```bash
+dig +short A www.anvaya.co.id @rommy.ns.cloudflare.com
+dig +short A www.anvaya.co.id @margot.ns.cloudflare.com
+```
+
+```text
+104.21.90.96
+172.67.155.108
+
+172.67.155.108
+104.21.90.96
+```
+
+The local system resolver briefly returned a stale Vercel DNS target for `www.anvaya.co.id`, but Cloudflare authoritative DNS and public resolvers returned the correct proxied Cloudflare anycast records.
+
+Pages project listing confirmed all domains are attached:
+
+```bash
+npx wrangler pages project list
+```
+
+```text
+anvaya-landing-page:
+  anvaya-landing-page.pages.dev
+  anvaya.co.id
+  www.anvaya.co.id
+```
+
+Final HTTPS verification:
+
+```bash
+curl -I https://anvaya.co.id
+curl -I https://www.anvaya.co.id
+curl -I https://anvaya.co.id/demo
+curl -sS -X POST https://anvaya.co.id/api/demo \
+  -H 'content-type: application/json' \
+  --data '{"name":"Test User","email":"test@example.com","company":"Example Co"}'
+```
+
+Observed results:
+
+```text
+https://anvaya.co.id      HTTP/2 200
+https://www.anvaya.co.id  HTTP/2 200 when resolved through Cloudflare/public DNS
+https://anvaya.co.id/demo HTTP/2 200
+POST /api/demo            {"ok":true,"stored":[]}
+```
+
+`www.anvaya.co.id` currently reaches the Pages project directly. It did not return a 301 redirect to the apex during verification. If a hard canonical redirect is required, add a Cloudflare Redirect Rule for only `www.anvaya.co.id` to `https://anvaya.co.id/$1` with status `301` and preserve path/query.
