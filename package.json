@@ -2,5 +2,9 @@
   "name": "anvaya-landing",
   "version": "1.0.0",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-static.mjs",
+    "preview": "npx serve dist"
+  }
 }
