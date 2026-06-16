@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-static.mjs",
-    "preview": "npx serve dist"
+    "preview": "npx wrangler pages dev dist",
+    "deploy:cloudflare": "npm run build && npx wrangler pages deploy dist --project-name anvaya-landing-page --branch main"
   }
 }

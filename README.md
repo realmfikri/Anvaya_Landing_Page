@@ -4,8 +4,20 @@ Static landing page for PT Anvaya Inteligensia Nusantara.
 
 ## Deployment
 
-This repository is configured to build a static `dist/` directory and deploy it with GitHub Pages at:
+This repository is configured to build a static `dist/` directory and deploy it with Cloudflare Pages at:
 
-https://anvaya.muhamadfikri.com
+https://anvaya.co.id
 
-For the full setup, DNS details, verification steps, and troubleshooting notes, see [docs/deployment-anvaya.md](docs/deployment-anvaya.md).
+Build command:
+
+```bash
+npm run build
+```
+
+Deploy command:
+
+```bash
+npx wrangler pages deploy dist --project-name anvaya-landing-page --branch main
+```
+
+For the full setup, DNS details, verification steps, rollback steps, and demo form backend notes, see [docs/deployment-cloudflare-anvaya-co-id.md](docs/deployment-cloudflare-anvaya-co-id.md).

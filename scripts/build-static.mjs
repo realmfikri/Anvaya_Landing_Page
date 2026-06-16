@@ -4,7 +4,15 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const dist = path.join(root, 'dist');
-const customDomain = 'anvaya.muhamadfikri.com';
+const DEFAULT_CUSTOM_DOMAIN = 'anvaya.co.id';
+const customDomain = (process.env.CUSTOM_DOMAIN || DEFAULT_CUSTOM_DOMAIN)
+  .trim()
+  .replace(/^https?:\/\//, '')
+  .replace(/\/.*$/, '');
+
+if (!customDomain) {
+  throw new Error('CUSTOM_DOMAIN cannot be empty.');
+}
 
 const entries = [
   'index.html',
@@ -47,26 +55,10 @@ for (const entry of entries) {
   });
 }
 
-await writeFile(path.join(dist, 'CNAME'), customDomain);
-await writeFile(path.join(dist, '.nojekyll'), '');
+const redirects = [
+  `https://www.${customDomain}/* https://${customDomain}/:splat 301`,
+];
 
-await mkdir(path.join(dist, 'demo'), { recursive: true });
-await writeFile(
-  path.join(dist, 'demo', 'index.html'),
-  `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="0; url=/demo.html">
-<link rel="canonical" href="/demo.html">
-<title>Request a Demo - Anvaya</title>
-</head>
-<body>
-<p>Redirecting to <a href="/demo.html">/demo.html</a>.</p>
-</body>
-</html>
-`,
-);
+await writeFile(path.join(dist, '_redirects'), `${redirects.join('\n')}\n`);
 
-console.log(`Built static site in ${path.relative(root, dist)}`);
+console.log(`Built static site in ${path.relative(root, dist)} for ${customDomain}`);
