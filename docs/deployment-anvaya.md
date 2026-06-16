@@ -194,7 +194,7 @@ The workflow sets `enablement: true` on `actions/configure-pages@v5`. The first 
 Get Pages site failed. Please verify that the repository has Pages enabled and configured to build using GitHub Actions, or consider exploring the enablement parameter for this action.
 ```
 
-After `enablement: true` was added, the retry still failed because the workflow token could not create the Pages site:
+After `enablement: true` was added, follow-up runs still failed because the workflow token could not create the Pages site:
 
 ```text
 Create Pages site failed. Error: Resource not accessible by integration
@@ -354,7 +354,7 @@ Generated dist/api/: intentionally absent because api/demo.js is Vercel serverle
 Secret scan of dist/: no Cloudflare, Resend, webhook, bearer-token, or private-key patterns found
 GitHub CLI auth/admin check: not completed because gh is not installed
 First GitHub Actions run: failed at Configure Pages because Pages was not enabled
-Second GitHub Actions run: failed at Configure Pages because the workflow token could not create the Pages site
+Follow-up GitHub Actions runs: failed at Configure Pages because the workflow token could not create the Pages site
 GitHub Pages API check: 404 Not Found, meaning Pages is not enabled/created for this repository yet
 GitHub Pages source configuration: manual repo-admin action required
 GitHub Pages custom domain configuration: manual action required unless configured elsewhere
