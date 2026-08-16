@@ -17,6 +17,7 @@ if (!customDomain) {
 const entries = [
   'index.html',
   'demo.html',
+  'hire.html',
   'style.css',
   'main.js',
   'agents.js',

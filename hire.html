@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIN Hire · Anvaya</title>
+<meta name="description" content="AIN Hire is Anvaya's hiring platform: a public job portal, an apply-first candidate journey, and a recruiter workspace where every score is evidence-backed, version-pinned, and every decision stays human.">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="assets/anvaya-icon.png">
+<style>
+  /* ---------- page shell ---------- */
+  .page-hero{position:relative;z-index:5;padding:170px 0 70px;}
+  .page-hero .wrap{max-width:960px;text-align:center;}
+  .page-hero h1{font-weight:700;letter-spacing:-.03em;line-height:1.0;
+    font-size:clamp(38px,6.4vw,74px);margin-top:22px;text-wrap:balance;}
+  .page-hero h1 .grad{background:linear-gradient(180deg,#fff,var(--red));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .page-hero .sub{margin:24px auto 0;max-width:730px;font-size:clamp(16px,1.5vw,20px);color:var(--ink-1);line-height:1.65;text-wrap:pretty;}
+  .page-hero .cta-row{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .page-hero .support{margin-top:26px;font-size:13.5px;color:var(--ink-2);display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;}
+  .page-hero .support .sep{width:4px;height:4px;border-radius:50%;background:var(--ink-3);}
+  .crumb{display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:600;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);}
+  .crumb a{color:var(--red);}
+  .crumb a:hover{color:var(--red-bright);}
+  .crumb .slash{color:var(--ink-3);}
+  .btn .ext{transition:transform .25s var(--ease);}
+  .btn:hover .ext{transform:translate(2px,-2px);}
+
+  /* ---------- stat strip ---------- */
+  .stats{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+  .stats .st{background:var(--bg-1);padding:26px 24px;}
+  .stats .st-n{font-size:23px;font-weight:700;letter-spacing:-.02em;color:var(--ink-0);line-height:1.2;}
+  .stats .st-n span{color:var(--red);}
+  .stats .st-d{margin-top:9px;font-size:13px;color:var(--ink-2);line-height:1.55;}
+  @media(max-width:880px){.stats{grid-template-columns:1fr 1fr;}}
+  @media(max-width:520px){.stats{grid-template-columns:1fr;}}
+
+  /* ---------- problem / shift ---------- */
+  .shift{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1000px;margin:0 auto;}
+  .shift .sc{border-radius:18px;padding:28px 28px 26px;background:var(--bg-1);border:1px solid var(--line);}
+  .shift .sc.after{background:linear-gradient(180deg,rgba(230,96,84,.07),var(--bg-1));border-color:var(--line-2);}
+  .shift .sc-label{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);}
+  .shift .sc.after .sc-label{color:var(--red);}
+  .shift ul{margin-top:16px;display:grid;gap:11px;list-style:none;}
+  .shift li{font-size:14.5px;color:var(--ink-1);line-height:1.55;display:flex;gap:11px;align-items:flex-start;}
+  .shift li::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--ink-3);flex:none;margin-top:7px;}
+  .shift .sc.after li::before{border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);}
+  @media(max-width:760px){.shift{grid-template-columns:1fr;}}
+
+  /* ---------- journey steps ---------- */
+  .lane{max-width:1080px;margin:0 auto;}
+  .lane + .lane{margin-top:58px;}
+  .lane-head{display:flex;align-items:center;gap:13px;margin-bottom:24px;}
+  .lane-ico{width:46px;height:46px;border-radius:13px;flex:none;display:grid;place-items:center;
+    background:rgba(230,96,84,.08);box-shadow:inset 0 0 0 1px var(--line-2);}
+  .lane-ico svg{width:24px;height:24px;stroke:var(--red);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .lane-title{font-size:21px;font-weight:700;letter-spacing:-.01em;}
+  .lane-tag{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);margin-top:2px;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .step{position:relative;border-radius:16px;padding:22px 22px 20px;background:var(--bg-1);
+    border:1px solid var(--line);transition:transform .3s var(--ease),border-color .3s,box-shadow .3s;}
+  .step:hover{transform:translateY(-3px);border-color:var(--line-2);box-shadow:0 30px 70px -40px rgba(0,0,0,.9);}
+  .step .sn{font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--red);font-variant-numeric:tabular-nums;}
+  .step .stt{margin-top:9px;font-size:16px;font-weight:600;color:var(--ink-0);line-height:1.3;}
+  .step .std{margin-top:8px;font-size:13.5px;color:var(--ink-1);line-height:1.6;}
+  .step .note{margin-top:12px;font-size:12.5px;color:var(--gold-bright);display:flex;gap:8px;align-items:flex-start;line-height:1.5;}
+  .step .note .d{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);flex:none;margin-top:6px;}
+  .steps.pair{grid-template-columns:repeat(2,1fr);}
+  @media(max-width:920px){.steps,.steps.pair{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.steps,.steps.pair{grid-template-columns:1fr;}}
+
+  /* ---------- capability grid ---------- */
+  .caps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;max-width:1080px;margin:0 auto;
+    background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+  .caps .cap{background:var(--bg-1);padding:26px 26px;transition:background .3s;}
+  .caps .cap:hover{background:var(--bg-2);}
+  .caps .cap-ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+    background:rgba(230,96,84,.08);box-shadow:inset 0 0 0 1px var(--line-2);margin-bottom:14px;}
+  .caps .cap-ico svg{width:20px;height:20px;stroke:var(--red);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .caps .cap-t{font-size:15.5px;font-weight:600;color:var(--ink-0);line-height:1.3;}
+  .caps .cap-d{margin-top:6px;font-size:13px;color:var(--ink-2);line-height:1.55;}
+  @media(max-width:880px){.caps{grid-template-columns:1fr 1fr;}}
+  @media(max-width:560px){.caps{grid-template-columns:1fr;}}
+
+  /* ---------- governance ---------- */
+  .gov{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .gov .gv{border-radius:16px;padding:24px 24px 22px;background:linear-gradient(180deg,rgba(227,168,87,.07),var(--bg-1));
+    border:1px solid rgba(227,168,87,.20);}
+  .gov .gv-t{font-size:15.5px;font-weight:600;color:var(--ink-0);display:flex;align-items:center;gap:10px;}
+  .gov .gv-t .d{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);flex:none;}
+  .gov .gv-d{margin-top:9px;font-size:13.5px;color:var(--ink-1);line-height:1.6;}
+  @media(max-width:760px){.gov{grid-template-columns:1fr;}}
+
+  /* ---------- never-infers list ---------- */
+  .never{max-width:1000px;margin:22px auto 0;border-radius:16px;padding:22px 24px;
+    background:var(--bg-1);border:1px solid var(--line);}
+  .never-t{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);}
+  .never-list{margin-top:14px;display:flex;flex-wrap:wrap;gap:9px;}
+  .never-list span{font-size:13px;font-weight:500;color:var(--ink-1);background:rgba(255,255,255,.025);
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px;}
+  .never-d{margin-top:14px;font-size:13px;color:var(--ink-2);line-height:1.6;}
+
+  /* ---------- fit / who it's for ---------- */
+  .fit{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .fit .ft{border-radius:16px;padding:24px;background:var(--bg-1);border:1px solid var(--line);}
+  .fit .ft-t{font-size:15.5px;font-weight:600;color:var(--ink-0);}
+  .fit .ft-d{margin-top:8px;font-size:13.5px;color:var(--ink-1);line-height:1.6;}
+  @media(max-width:800px){.fit{grid-template-columns:1fr;}}
+
+  /* ---------- closing note ---------- */
+  .proto{max-width:1000px;margin:44px auto 0;border-radius:16px;padding:20px 24px;
+    background:var(--bg-1);border:1px dashed var(--line-2);
+    font-size:13.5px;color:var(--ink-2);line-height:1.6;display:flex;gap:12px;align-items:flex-start;}
+  .proto .d{width:7px;height:7px;border-radius:50%;background:var(--red);flex:none;margin-top:7px;}
+  .proto a{color:var(--red);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="bg-field"></div>
+<div class="grid-lines"></div>
+<div id="contours"></div>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav" id="nav">
+  <a class="brand" href="index.html">
+    <img src="assets/anvaya-icon.png" alt="Anvaya">
+    <span class="word">Anvaya</span>
+  </a>
+  <nav class="navlinks">
+    <a href="index.html#platform">AIN Platform</a>
+    <a href="#candidate">Candidate journey</a>
+    <a href="#recruiter">Recruiter workspace</a>
+    <a href="#governance">Governance</a>
+  </nav>
+  <div class="nav-right">
+    <span class="lang"><span class="dot"></span>EN / ID</span>
+    <a class="btn btn-primary" href="https://ain-hire.anvaya.co.id/" target="_blank" rel="noopener">Open AIN Hire
+      <svg class="ext" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16L18 6M18 6h-7M18 6v7"/></svg>
+    </a>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="page-hero" id="top">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html#platform">AIN People</a><span class="slash">/</span><span>AIN Hire</span></div>
+    <h1>Hiring that holds up<br>at <span class="grad">volume</span></h1>
+    <p class="sub">AIN Hire is the hiring platform inside AIN People: a public job portal, an apply-first candidate journey, and a recruiter workspace on one service. It reads CVs against the criteria you published, runs structured interviews, and hands your recruiters evidence they can defend — while every hiring decision stays with a human.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://ain-hire.anvaya.co.id/" target="_blank" rel="noopener">Open AIN Hire
+        <svg class="ext" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16L18 6M18 6h-7M18 6v7"/></svg>
+      </a>
+      <button class="btn btn-ghost" data-cta>Request a Demo
+        <svg class="arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <div class="support">
+      <span>Public job portal + recruiter workspace</span><span class="sep"></span>
+      <span>Bahasa Indonesia native</span><span class="sep"></span>
+      <span>Decision support — humans decide</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATS ===================== -->
+<section class="block" style="padding-top:0;">
+  <div class="wrap">
+    <div class="stats reveal">
+      <div class="st"><div class="st-n">One <span>apply-first</span> form</div><div class="st-d">Candidates apply straight from the public job page — profile, prerequisites, consent, and a private CV in one pass.</div></div>
+      <div class="st"><div class="st-n">Status <span>without chasing</span></div><div class="st-d">A six-digit email code opens a candidate's own status page. They see neutral stage labels — never scores, rank, or recruiter notes.</div></div>
+      <div class="st"><div class="st-n">Weights <span>you can edit</span></div><div class="st-d">CV–Role Match ships at 30/35/15/20 across experience, skills, domain, and impact. Your recruiters change it.</div></div>
+      <div class="st"><div class="st-n">Every score <span>version-pinned</span></div><div class="st-d">Evidence is scored against the exact blueprint version it was published under, so later edits can't rewrite past results.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== THE SHIFT ===================== -->
+<section class="block" id="why-hire">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow center" style="justify-content:center;">Why AIN Hire</div>
+      <h2>High-volume hiring<br>breaks the old process</h2>
+      <p>When a posting draws thousands of applicants, screening turns into triage: most CVs go unread, criteria drift between reviewers, and the reasoning behind a decision disappears the moment the round closes.</p>
+    </div>
+    <div class="shift reveal d1">
+      <div class="sc">
+        <div class="sc-label">Hiring today</div>
+        <ul>
+          <li>Recruiters read a fraction of the CVs that arrive.</li>
+          <li>Criteria shift between reviewers, and between weeks.</li>
+          <li>A gap in a CV quietly becomes a low score.</li>
+          <li>Candidates chase recruiters for a status update.</li>
+          <li>Six months later, nobody can reconstruct why a candidate was cut.</li>
+        </ul>
+      </div>
+      <div class="sc after">
+        <div class="sc-label">Hiring with AIN Hire</div>
+        <ul>
+          <li>Every applicant is read against the same published criteria.</li>
+          <li>Criteria are frozen per version, so a round stays comparable end to end.</li>
+          <li>Missing evidence is flagged for review, never scored as a zero.</li>
+          <li>Candidates check their own status whenever they want.</li>
+          <li>Every score keeps the quote behind it, and every decision keeps its reason.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CANDIDATE JOURNEY ===================== -->
+<section class="block" id="candidate">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow center" style="justify-content:center;">The candidate side</div>
+      <h2>Apply first,<br>prove it in the flow</h2>
+      <p>The whole journey runs on a phone browser, in Bahasa Indonesia. No app, no recruiter gatekeeping a login, and a real alternative path when the standard route doesn't fit.</p>
+    </div>
+
+    <div class="lane reveal d1">
+      <div class="lane-head">
+        <div class="lane-ico"><svg viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 3h9l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 13h6M9 17h4"/></svg></div>
+        <div><div class="lane-title">Apply &amp; screen</div><div class="lane-tag">Public job portal · Apply-first</div></div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="sn">01</div>
+          <div class="stt">Open the job</div>
+          <div class="std">Every published position gets a public job page with its own URL and a printable QR code, pinned to the version it was published under — so a poster in the field always points at the job people actually applied to.</div>
+        </div>
+        <div class="step">
+          <div class="sn">02</div>
+          <div class="stt">Apply in one pass</div>
+          <div class="std">Profile, prerequisite answers, purpose-specific consent, and a private CV upload — one form, no account creation step in front of it.</div>
+          <div class="note"><span class="d"></span>Consent is recorded per purpose, not as one blanket tick.</div>
+        </div>
+        <div class="step">
+          <div class="sn">03</div>
+          <div class="stt">Check status any time</div>
+          <div class="std">A six-digit email code — hashed, single-use, rate-limited, ten-minute expiry — opens a status page across every application. Candidates see stage labels only.</div>
+          <div class="note"><span class="d"></span>No scores, no rank, no cross-employer data.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane reveal d1">
+      <div class="lane-head">
+        <div class="lane-ico"><svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="M15.5 11l6-3.5v9L15.5 13z"/></svg></div>
+        <div><div class="lane-title">Show the work</div><div class="lane-tag">Structured interview · Optional assessment</div></div>
+      </div>
+      <div class="steps pair">
+        <div class="step">
+          <div class="sn">04</div>
+          <div class="stt">A structured interview, not a chat</div>
+          <div class="std">Each question is written by your recruiters and mapped to the skills it tests. Answers are recorded in turns of up to sixty seconds, transcribed server-side, and scored per question–skill mapping — then averaged deterministically against your weights.</div>
+          <div class="note"><span class="d"></span>Verbatim quotes are kept with every score.</div>
+        </div>
+        <div class="step">
+          <div class="sn">05</div>
+          <div class="stt">Consent, per purpose</div>
+          <div class="std">Audio consent is required for the self-service interview. Video is separate and optional — declining it leaves a genuine audio-only path, not a degraded one. Withdrawing a purpose writes a new consent revision rather than erasing the old.</div>
+        </div>
+        <div class="step">
+          <div class="sn">06</div>
+          <div class="stt">A route that fits the candidate</div>
+          <div class="std">When the device, the connection, or an accessibility need makes the self-service interview unsuitable, the candidate can request a phone interview, a written response, or an assisted session. A recruiter resolves it with a recorded reason.</div>
+        </div>
+        <div class="step">
+          <div class="sn">07</div>
+          <div class="stt">Assessment, only if the role needs it</div>
+          <div class="std">Multiple choice, situational judgement, or written response — authored by your team, mapped to skills, resumable, and off by default. Candidates never see answer keys or rubrics.</div>
+          <div class="note"><span class="d"></span>Interview and assessment are independent stages.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RECRUITER WORKSPACE ===================== -->
+<section class="block" id="recruiter">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow center" style="justify-content:center;">The recruiter side</div>
+      <h2>A workspace built for<br>thousands of applicants</h2>
+      <p>Recruiters define the role, approve what gets published, and make every call that affects a candidate. The platform does the reading, the transcribing, and the bookkeeping in between.</p>
+    </div>
+    <div class="caps reveal d1">
+      <div class="cap">
+        <div class="cap-ico"><svg viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 3h9l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 13h6M9 17h4"/></svg></div>
+        <div class="cap-t">Position &amp; role blueprint</div>
+        <div class="cap-d">A position owns its job description, criteria, and applicants. Its blueprint versions are immutable, and the next hiring round is a duplicate with a clean applicant set.</div>
+      </div>
+      <div class="cap">
+        <div class="cap-ico"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 4.2 4.6.5-3.4 3.1.9 4.5L12 13l-4 2.3.9-4.5L5.5 7.7l4.6-.5z"/><path d="M5 20h14"/></svg></div>
+        <div class="cap-t">AI drafts, humans approve</div>
+        <div class="cap-d">AI can draft the job description, skills, interview kit, and pipeline. It still has to move through draft, review, approval, and publish — and every transition is audited.</div>
+      </div>
+      <div class="cap">
+        <div class="cap-ico"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3h-3zM20 14v6h-3"/></svg></div>
+        <div class="cap-t">A real public job page</div>
+        <div class="cap-d">Publishing produces a version-pinned job URL, an apply URL, and a downloadable QR. Editing the public copy later never changes the slug, so printed material stays valid.</div>
+      </div>
+      <div class="cap">
+        <div class="cap-ico"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M2 20h20"/></svg></div>
+        <div class="cap-t">CV–Role Match</div>
+        <div class="cap-d">Four editable components — experience fit, skill match, domain fit, and impact evidence. Trajectory and stability is reported as a factual flag, not folded into the score.</div>
+      </div>
+      <div class="cap">
+        <div class="cap-ico"><svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></svg></div>
+        <div class="cap-t">Top-N gate, with a reason</div>
+        <div class="cap-d">Preview and confirm the top 100, 500, 1,000, 2,000, or a custom cut for that exact position and version. The confirmation is audited and advances a stage — it never rejects anyone on its own.</div>
+      </div>
+      <div class="cap">
+        <div class="cap-ico"><svg viewBox="0 0 24 24"><path d="M12 3v4"/><rect x="4" y="7" width="16" height="13" rx="2.5"/><path d="M9 13h6M9 16.5h4"/></svg></div>
+        <div class="cap-t">Interview kit</div>
+        <div class="cap-d">Author questions, map each one to the skills it tests, and set the mapping weight. Server-side transcription produces the scoring text; a browser note can't bypass it.</div>
+      </div>
+      <div class="cap">
+        <div class="cap-ico"><svg viewBox="0 0 24 24"><path d="M9 11l2 2 4-4"/><rect x="3.5" y="4" width="17" height="16" rx="2.5"/></svg></div>
+        <div class="cap-t">Review queue for weak audio</div>
+        <div class="cap-d">If transcription returns nothing usable, the answer goes to a reviewer who can replay the recording, retry, or add a correction as a new revision. Scoring resumes only once the text is real.</div>
+      </div>
+      <div class="cap">
+        <div class="cap-ico"><svg viewBox="0 0 24 24"><path d="M6 20V9M12 20V4M18 20v-8"/><circle cx="12" cy="4" r="1.6"/></svg></div>
+        <div class="cap-t">Shortlist, handoff, sign-off</div>
+        <div class="cap-d">Shortlist decisions are individual and carry reasons. Shortlisted candidates go to the hiring manager through a recipient-bound, expiring, one-time link, and a terminal sign-off closes the case.</div>
+      </div>
+      <div class="cap">
+        <div class="cap-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M17 8h5M19.5 5.5V11"/></svg></div>
+        <div class="cap-t">Internal mobility</div>
+        <div class="cap-d">Nominate employees from the talent pool into an internal position, scored on the same evidence rules but reported as ready now, ready with support, development needed, or evidence insufficient.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GOVERNANCE ===================== -->
+<section class="block" id="governance">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow center" style="justify-content:center;">Responsible AI</div>
+      <h2>Defensible by design,<br>not by promise</h2>
+      <p>Hiring decisions get challenged. AIN Hire is built so you can show exactly how a decision was reached — and so the AI never makes the final one.</p>
+    </div>
+    <div class="gov reveal d1">
+      <div class="gv">
+        <div class="gv-t"><span class="d"></span>Decision support, not decision making</div>
+        <div class="gv-d">AI extracts and organizes job-related evidence. It cannot make a final shortlist, rejection, hire, promotion, or rotation decision. Human decisions and overrides require reasons and create append-only revisions.</div>
+      </div>
+      <div class="gv">
+        <div class="gv-t"><span class="d"></span>Consent, versioned per purpose</div>
+        <div class="gv-d">Consent is recorded per person, case, purpose, timestamp, and channel — CV processing, audio, video, and identity are separate records. Withdrawing one writes a new revision instead of overwriting history.</div>
+      </div>
+      <div class="gv">
+        <div class="gv-t"><span class="d"></span>Missing evidence isn't a zero</div>
+        <div class="gv-d">When a CV or an answer doesn't evidence a requirement, the result is an explicit review state. Evidence confidence describes how well a claim is supported — not how truthful or suitable a person is.</div>
+      </div>
+      <div class="gv">
+        <div class="gv-t"><span class="d"></span>Retention and data rights</div>
+        <div class="gv-d">Candidates can request access, correction, consent withdrawal, or deletion, and deletion runs across every case. Raw identity documents and raw interview video are scheduled for deletion by default, not kept indefinitely.</div>
+      </div>
+    </div>
+    <div class="never reveal">
+      <div class="never-t">Never inferred, never ranked on</div>
+      <div class="never-list">
+        <span>Emotion</span><span>Honesty as a trait</span><span>Confidence as personality</span><span>Mental or psychological state</span><span>Cultural fit</span><span>Protected characteristics</span><span>Gaze-based “cheating”</span>
+      </div>
+      <div class="never-d">What gets scored instead is what the candidate actually said against a defined, job-related scenario — with the quote, the skill it maps to, and the limits of the evidence attached. Identity verification never contributes to ranking, and where a certified provider isn't configured the result is labelled as unverified rather than passed off as a check.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FIT ===================== -->
+<section class="block" id="fit">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow center" style="justify-content:center;">Where it fits</div>
+      <h2>Built for the hiring<br>that doesn't scale</h2>
+    </div>
+    <div class="fit reveal d1">
+      <div class="ft">
+        <div class="ft-t">High-volume external hiring</div>
+        <div class="ft-d">Frontline, field, and branch roles where one posting draws thousands of applicants and a small recruiting team has to cover far more CVs than it can read.</div>
+      </div>
+      <div class="ft">
+        <div class="ft-t">Internal mobility</div>
+        <div class="ft-d">Moving people you already employ, judged on the same evidence rules as external candidates but reported in readiness language rather than pass or fail.</div>
+      </div>
+      <div class="ft">
+        <div class="ft-t">Hiring that must be defensible</div>
+        <div class="ft-d">Processes that have to stay consistent, documented, and explainable months later — to an auditor, to a works council, or to the candidate who was turned down.</div>
+      </div>
+    </div>
+    <div class="proto reveal">
+      <span class="d"></span>
+      <span>AIN Hire is part of <a href="index.html#platform">AIN People</a> and shares the orchestration, integrations, memory, and governance layer that runs the rest of the AIN platform. The workspace at <a href="https://ain-hire.anvaya.co.id/" target="_blank" rel="noopener">ain-hire.anvaya.co.id</a> is live; the large applicant sets you'll see inside it are clearly labelled synthetic data, there to show high-volume operations rather than to claim real candidates. Ask us for a walkthrough and we'll configure it around a position you're hiring for now.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<section class="block" style="padding-top:40px;">
+  <div class="cta reveal">
+    <img class="cta-mark" src="assets/anvaya-icon.png" alt="">
+    <h2>See AIN Hire on one of your roles</h2>
+    <p>Open the platform and look around, or let us set up a walkthrough using a position you're actually hiring for — your criteria, your weights, your questions.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://ain-hire.anvaya.co.id/" target="_blank" rel="noopener">Open AIN Hire
+        <svg class="ext" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16L18 6M18 6h-7M18 6v7"/></svg>
+      </a>
+      <button class="btn btn-ghost" data-cta>Request a Demo
+        <svg class="arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="fb-row"><img src="assets/anvaya-icon.png" alt="Anvaya"><span class="word">Anvaya</span></div>
+        <p>PT Anvaya Inteligensia Nusantara<br>Connecting Intelligence Across Nusantara</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Platform</h4><a href="index.html#platform">AIN People</a><a href="hire.html">AIN Hire</a><a href="index.html#platform">AIN Finance</a><a href="index.html#platform">AIN Legal</a><a href="index.html#platform">AIN IoT</a><a href="index.html#platform">AIN Consulting</a></div>
+        <div class="foot-col"><h4>AIN Hire</h4><a href="https://ain-hire.anvaya.co.id/" target="_blank" rel="noopener">Open the platform</a><a href="#candidate">Candidate journey</a><a href="#recruiter">Recruiter workspace</a><a href="#governance">Responsible AI</a></div>
+        <div class="foot-col"><h4>Get started</h4><a href="#" data-cta>Request a Demo</a><a href="#" data-cta>Talk to Us</a></div>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span class="legal">© 2026 PT Anvaya Inteligensia Nusantara. All rights reserved.</span>
+      <span class="legal">Connecting Intelligence Across Nusantara</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const nav=document.getElementById('nav');
+  const onScroll=()=>{ nav.classList.toggle('scrolled', scrollY>40); };
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:0.16, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  document.querySelectorAll('[data-cta]').forEach(b=>{
+    b.addEventListener('click', e=>{
+      if(b.tagName==='A') e.preventDefault();
+      window.location.href='demo.html';
+    });
+  });
+})();
+</script>
+<script src="contours.js"></script>
+</body>
+</html>
