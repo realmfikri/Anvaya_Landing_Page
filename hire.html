@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIN Hire · Anvaya</title>
+<meta name="description" content="AIN Hire is Anvaya's hiring platform: a public job portal, an apply-first candidate journey, and a recruiter workspace where every score is evidence-backed, version-pinned, and every decision stays human.">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="assets/anvaya-icon.png">
+<style>
+  /* ---------- page shell ---------- */
+  .page-hero{position:relative;z-index:5;padding:170px 0 70px;}
+  .page-hero .wrap{max-width:960px;text-align:center;}
+  .page-hero h1{font-weight:700;letter-spacing:-.03em;line-height:1.0;
+    font-size:clamp(38px,6.4vw,74px);margin-top:22px;text-wrap:balance;}
+  .page-hero h1 .grad{background:linear-gradient(180deg,#fff,var(--red));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .page-hero .sub{margin:24px auto 0;max-width:730px;font-size:clamp(16px,1.5vw,20px);color:var(--ink-1);line-height:1.65;text-wrap:pretty;}
+  .page-hero .cta-row{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .page-hero .support{margin-top:26px;font-size:13.5px;color:var(--ink-2);display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;}
+  .page-hero .support .sep{width:4px;height:4px;border-radius:50%;background:var(--ink-3);}
+  .crumb{display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:600;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);}
+  .crumb a{color:var(--red);}
+  .crumb a:hover{color:var(--red-bright);}
+  .crumb .slash{color:var(--ink-3);}
+  .btn .ext{transition:transform .25s var(--ease);}
+  .btn:hover .ext{transform:translate(2px,-2px);}
+
+  /* ---------- stat strip ---------- */
+  .stats{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+  .stats .st{background:var(--bg-1);padding:26px 24px;}
+  .stats .st-n{font-size:23px;font-weight:700;letter-spacing:-.02em;color:var(--ink-0);line-height:1.2;}
+  .stats .st-n span{color:var(--red);}
+  .stats .st-d{margin-top:9px;font-size:13px;color:var(--ink-2);line-height:1.55;}
+  @media(max-width:880px){.stats{grid-template-columns:1fr 1fr;}}
+  @media(max-width:520px){.stats{grid-template-columns:1fr;}}
+
+  /* ---------- governance ---------- */
+  .gov{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .gov .gv{border-radius:16px;padding:24px 24px 22px;background:linear-gradient(180deg,rgba(227,168,87,.07),var(--bg-1));
+    border:1px solid rgba(227,168,87,.20);}
+  .gov .gv-t{font-size:15.5px;font-weight:600;color:var(--ink-0);display:flex;align-items:center;gap:10px;}
+  .gov .gv-t .d{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);flex:none;}
+  .gov .gv-d{margin-top:9px;font-size:13.5px;color:var(--ink-1);line-height:1.6;}
+  @media(max-width:760px){.gov{grid-template-columns:1fr;}}
+
+  /* ---------- never-infers list ---------- */
+  .never{max-width:1000px;margin:22px auto 0;border-radius:16px;padding:22px 24px;
+    background:var(--bg-1);border:1px solid var(--line);}
+  .never-t{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);}
+  .never-list{margin-top:14px;display:flex;flex-wrap:wrap;gap:9px;}
+  .never-list span{font-size:13px;font-weight:500;color:var(--ink-1);background:rgba(255,255,255,.025);
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px;}
+  .never-d{margin-top:14px;font-size:13px;color:var(--ink-2);line-height:1.6;}
+
+  /* ---------- fit / who it's for ---------- */
+  .fit{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .fit .ft{border-radius:16px;padding:24px;background:var(--bg-1);border:1px solid var(--line);}
+  .fit .ft-t{font-size:15.5px;font-weight:600;color:var(--ink-0);}
+  .fit .ft-d{margin-top:8px;font-size:13.5px;color:var(--ink-1);line-height:1.6;}
+  @media(max-width:800px){.fit{grid-template-columns:1fr;}}
+
+  /* ---------- the film (self-hosted) ---------- */
+  .film{max-width:1060px;margin:0 auto;}
+  .film-frame{position:relative;aspect-ratio:16/9;border-radius:22px;overflow:hidden;
+    border:1px solid var(--line-2);background:var(--bg-1);
+    box-shadow:0 70px 150px -70px rgba(0,0,0,.95), 0 0 0 1px rgba(230,96,84,.05);}
+  .film-frame video{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;background:#0B0707;}
+  .film-play{position:absolute;inset:0;width:100%;height:100%;border:none;padding:0;cursor:pointer;
+    background:transparent;display:block;text-align:left;z-index:2;
+    transition:opacity .45s var(--ease),visibility .45s;}
+  .film-frame.playing .film-play{opacity:0;visibility:hidden;pointer-events:none;}
+  .film-play img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.94;
+    transition:opacity .5s var(--ease),transform .7s var(--ease);}
+  .film-play:hover img{opacity:1;transform:scale(1.02);}
+  .film-play::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,transparent 0%,transparent 46%,rgba(11,7,7,.55) 74%,rgba(11,7,7,.94) 100%);}
+  .film-play .pb{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--red);
+    box-shadow:0 0 0 1px rgba(244,117,103,.45),0 20px 70px -14px rgba(230,96,84,.85);
+    transition:transform .3s var(--ease),background .3s;}
+  .film-play:hover .pb{transform:scale(1.08);background:var(--red-bright);}
+  .film-play .pb svg{width:22px;height:22px;fill:#FBEDE9;margin-left:3px;}
+  .film-play .cap{position:absolute;z-index:2;left:clamp(20px,3vw,34px);right:clamp(20px,3vw,34px);bottom:clamp(20px,2.6vw,30px);
+    display:flex;align-items:center;gap:20px;}
+  .film-play .cap-txt{min-width:0;}
+  .film-meta{display:none;}
+  @media(max-width:640px){
+    .film-play .cap{inset:0;left:0;right:0;bottom:0;justify-content:center;}
+    .film-play .cap-txt{display:none;}
+    .film-play::after{background:linear-gradient(180deg,rgba(11,7,7,.10),rgba(11,7,7,.45));}
+    .film-meta{display:block;margin-top:16px;text-align:center;}
+    .film-meta .fm-t{display:block;font-size:15.5px;font-weight:600;color:var(--ink-0);line-height:1.35;}
+    .film-meta .fm-d{display:block;margin-top:6px;font-size:12.5px;color:var(--ink-2);}
+  }
+  .film-play .cap-t{display:block;font-size:clamp(15px,1.6vw,19px);font-weight:600;color:var(--ink-0);letter-spacing:-.01em;}
+  .film-play .cap-d{margin-top:6px;font-size:13px;color:var(--ink-1);display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
+  .film-play .cap-d .sep{width:4px;height:4px;border-radius:50%;background:var(--ink-3);}
+  .chapters{margin-top:18px;display:flex;gap:9px;flex-wrap:wrap;justify-content:center;}
+  .chapters .ch{font-family:var(--font);font-size:13px;font-weight:500;color:var(--ink-1);cursor:pointer;
+    background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:999px;padding:8px 15px;
+    display:inline-flex;align-items:center;gap:9px;transition:border-color .25s,color .25s,background .25s;}
+  .chapters .ch:hover{border-color:var(--red);color:var(--ink-0);background:rgba(230,96,84,.08);}
+  .chapters .ch[aria-current="true"]{border-color:var(--red);background:rgba(230,96,84,.12);color:var(--ink-0);}
+  .chapters .ch .t{font-size:12px;font-weight:700;color:var(--red);font-variant-numeric:tabular-nums;}
+  .film-note{margin:20px auto 0;max-width:760px;text-align:center;font-size:12.5px;color:var(--ink-2);line-height:1.6;}
+
+  /* ---------- compact before/after strip (merged into assistants) ---------- */
+  .shift-lite{max-width:1080px;margin:0 auto 44px;display:grid;grid-template-columns:1fr 1fr;gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+  .shift-lite .sl{background:var(--bg-1);padding:24px 26px;}
+  .shift-lite .sl.after{background:linear-gradient(180deg,rgba(230,96,84,.07),var(--bg-1));}
+  .shift-lite .sl-label{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);}
+  .shift-lite .sl.after .sl-label{color:var(--red);}
+  .shift-lite ul{margin-top:14px;display:grid;gap:9px;list-style:none;}
+  .shift-lite li{font-size:13.5px;color:var(--ink-1);line-height:1.55;display:flex;gap:10px;align-items:flex-start;}
+  .shift-lite li::before{content:"";width:6px;height:6px;border-radius:2px;background:var(--ink-3);flex:none;margin-top:6px;}
+  .shift-lite .sl.after li::before{border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);}
+  @media(max-width:760px){.shift-lite{grid-template-columns:1fr;}}
+
+  /* ---------- two-sided how-it-runs ---------- */
+  .sides{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .side{border-radius:20px;padding:28px 26px 24px;background:var(--bg-1);border:1px solid var(--line);}
+  .side.rec{background:linear-gradient(180deg,rgba(227,168,87,.05),var(--bg-1));}
+  .side-head{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+  .side-ico{width:42px;height:42px;border-radius:12px;flex:none;display:grid;place-items:center;
+    background:rgba(230,96,84,.08);box-shadow:inset 0 0 0 1px var(--line-2);}
+  .side.rec .side-ico{background:rgba(227,168,87,.09);}
+  .side-ico svg{width:22px;height:22px;stroke:var(--red);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .side.rec .side-ico svg{stroke:var(--gold);}
+  .side-tag{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);}
+  .side-title{font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.2;}
+  .side-lead{margin-top:12px;font-size:13.5px;color:var(--ink-1);line-height:1.6;}
+  .side ol{margin-top:18px;display:grid;gap:13px;list-style:none;counter-reset:s;}
+  .side ol li{position:relative;padding-left:34px;font-size:13.5px;color:var(--ink-1);line-height:1.58;counter-increment:s;}
+  .side ol li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;
+    font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--red);font-variant-numeric:tabular-nums;}
+  .side.rec ol li::before{color:var(--gold);}
+  .side ol li b{color:var(--ink-0);font-weight:600;}
+  .side .fine{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--ink-2);line-height:1.6;}
+  @media(max-width:860px){.sides{grid-template-columns:1fr;}}
+
+  /* ---------- four assistants ---------- */
+  .asst{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .ac{position:relative;overflow:hidden;border-radius:20px;padding:30px 28px 26px;background:var(--bg-1);
+    border:1px solid var(--line);transition:transform .3s var(--ease),border-color .3s,box-shadow .3s;}
+  .ac:hover{transform:translateY(-3px);border-color:var(--line-2);box-shadow:0 40px 90px -50px rgba(0,0,0,.95);}
+  .ac::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+    background:linear-gradient(90deg,var(--red),transparent 70%);}
+  .ac.gold::before{background:linear-gradient(90deg,var(--gold),transparent 70%);}
+  .ac-n{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);}
+  .ac-n b{color:var(--red);}
+  .ac.gold .ac-n b{color:var(--gold);}
+  .ac-t{margin-top:10px;font-size:clamp(19px,2vw,23px);font-weight:700;letter-spacing:-.02em;line-height:1.15;}
+  .ac-lead{margin-top:11px;font-size:14.5px;color:var(--ink-1);line-height:1.62;}
+  .io{margin-top:20px;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:13px;overflow:hidden;}
+  .io .r{background:var(--bg-2);padding:13px 15px;display:grid;grid-template-columns:74px 1fr;gap:13px;align-items:start;}
+  .io .k{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-2);padding-top:3px;}
+  .io .v{font-size:13.5px;color:var(--ink-0);line-height:1.55;}
+  .io .v em{font-style:normal;color:var(--ink-1);}
+  .ev{margin-top:18px;display:grid;gap:9px;list-style:none;}
+  .ev li{font-size:13px;color:var(--ink-1);line-height:1.6;position:relative;padding-left:17px;}
+  .ev li::before{content:"";position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;
+    background:var(--red);box-shadow:0 0 8px rgba(230,96,84,.7);}
+  .ac.gold .ev li::before{background:var(--gold);box-shadow:0 0 8px var(--gold);}
+  .ev li b{color:var(--ink-0);font-weight:600;font-variant-numeric:tabular-nums;}
+  @media(max-width:860px){.asst{grid-template-columns:1fr;}}
+  @media(max-width:440px){.io .r{grid-template-columns:1fr;gap:7px;}.io .k{padding-top:0;}}
+
+  /* ---------- worked example / score chain ---------- */
+  .chain{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:stretch;}
+  .cl{border-radius:18px;padding:24px 22px;background:var(--bg-1);border:1px solid var(--line);}
+  .cl.final{background:linear-gradient(180deg,rgba(230,96,84,.09),var(--bg-1));border-color:var(--line-2);}
+  .cl-k{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);}
+  .cl-n{margin-top:12px;font-size:46px;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink-0);}
+  .cl.final .cl-n{color:var(--red);}
+  .cl-s{margin-top:8px;font-size:12.5px;color:var(--ink-2);line-height:1.55;}
+  .rows{margin-top:18px;display:grid;gap:9px;}
+  .rows .rr{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;font-size:12.5px;color:var(--ink-1);}
+  .rows .rr .w{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums;}
+  .rows .rr .n{font-weight:700;color:var(--ink-0);font-variant-numeric:tabular-nums;}
+  .track{margin-top:4px;height:3px;border-radius:2px;background:rgba(255,255,255,.05);overflow:hidden;grid-column:1/-1;}
+  .track i{display:block;height:100%;border-radius:2px;background:linear-gradient(90deg,var(--red-deep),var(--red-bright));}
+  .verdict{max-width:1080px;margin:16px auto 0;border-radius:18px;padding:24px 26px;background:var(--bg-1);
+    border:1px solid var(--line);display:grid;grid-template-columns:1.15fr 1fr;gap:26px;align-items:center;}
+  .verdict .vt{font-size:16px;font-weight:600;color:var(--ink-0);line-height:1.4;display:flex;gap:11px;align-items:flex-start;}
+  .verdict .vt .d{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);flex:none;margin-top:8px;}
+  .verdict .vd{margin-top:10px;font-size:13.5px;color:var(--ink-1);line-height:1.62;}
+  .verdict .alt{border-left:1px solid var(--line);padding-left:26px;}
+  .verdict .alt-t{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);}
+  .verdict .alt-r{margin-top:12px;display:flex;justify-content:space-between;gap:14px;font-size:13.5px;color:var(--ink-1);}
+  .verdict .alt-r b{color:var(--ink-0);font-variant-numeric:tabular-nums;}
+  .verdict .alt-r + .alt-r{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);}
+  @media(max-width:900px){.chain{grid-template-columns:1fr;}.verdict{grid-template-columns:1fr;}
+    .verdict .alt{border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:22px;}}
+  .disc{max-width:1080px;margin:18px auto 0;font-size:12.5px;color:var(--ink-2);line-height:1.65;
+    border-radius:14px;padding:16px 20px;background:rgba(255,255,255,.015);border:1px dashed var(--line-2);}
+  .disc b{color:var(--ink-1);font-weight:600;}
+
+  /* ---------- closing note ---------- */
+  .proto{max-width:1000px;margin:44px auto 0;border-radius:16px;padding:20px 24px;
+    background:var(--bg-1);border:1px dashed var(--line-2);
+    font-size:13.5px;color:var(--ink-2);line-height:1.6;display:flex;gap:12px;align-items:flex-start;}
+  .proto .d{width:7px;height:7px;border-radius:50%;background:var(--red);flex:none;margin-top:7px;}
+  .proto a{color:var(--red);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="bg-field"></div>
+<div class="grid-lines"></div>
+<div id="contours"></div>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav" id="nav">
+  <a class="brand" href="index.html">
+    <img src="assets/anvaya-icon.png" alt="Anvaya">
+    <span class="word">Anvaya</span>
+  </a>
+  <nav class="navlinks">
+    <a href="index.html#platform">AIN Platform</a>
+    <a href="#film">Film</a>
+    <a href="#assistants">Four assistants</a>
+    <a href="#example">One hire</a>
+    <a href="#how">Both sides</a>
+    <a href="#governance">Governance</a>
+  </nav>
+  <div class="nav-right">
+    <span class="lang"><span class="dot"></span>EN / ID</span>
+    <a class="btn btn-primary" href="https://ain-hire.anvaya.co.id/" target="_blank" rel="noopener">Open AIN Hire
+      <svg class="ext" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16L18 6M18 6h-7M18 6v7"/></svg>
+    </a>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="page-hero" id="top">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html#platform">AIN People</a><span class="slash">/</span><span>AIN Hire</span></div>
+    <h1>Four assistants.<br>One hire you can <span class="grad">explain</span></h1>
+    <p class="sub">One sentence becomes a published role. Every CV that arrives is read against the weights you set. The strongest interview on their own phone. Every number opens to the line behind it — and every decision stays yours.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#film">Watch the film · 1:41
+        <svg class="arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="https://ain-hire.anvaya.co.id/" target="_blank" rel="noopener">Open AIN Hire
+        <svg class="ext" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16L18 6M18 6h-7M18 6v7"/></svg>
+      </a>
+      <button class="btn btn-ghost" data-cta>Request a Demo
+        <svg class="arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <div class="support">
+      <span>JD · Screening &amp; Interview · Report · Talent</span><span class="sep"></span>
+      <span>Bahasa Indonesia native</span><span class="sep"></span>
+      <span>Decision support — humans decide</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FILM ===================== -->
+<section class="block" id="film" style="padding-top:14px;">
+  <div class="wrap">
+    <div class="film">
+      <div class="film-frame reveal" id="filmFrame">
+        <video id="filmVideo" preload="none" playsinline
+               poster="assets/ain-hire-film-poster.jpg"
+               width="1920" height="1080"
+               aria-label="AIN Hire — your AI-powered hiring assistant, 1 minute 41 seconds">
+          <source src="assets/ain-hire-promo.mp4" type="video/mp4">
+          Your browser can't play this video.
+          <a href="assets/ain-hire-promo.mp4">Open the film directly</a>.
+        </video>
+        <button class="film-play" type="button" id="filmPlay" aria-label="Play the AIN Hire film (1 minute 41 seconds)">
+          <img src="assets/ain-hire-film-poster.jpg" alt="" loading="lazy" decoding="async" width="1600" height="900">
+          <span class="cap">
+            <span class="pb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+            <span class="cap-txt">
+              <span class="cap-t">AIN Hire — your AI-powered hiring assistant</span>
+              <span class="cap-d"><span>1:41</span><span class="sep"></span><span>One position, 481 applicants, four assistants</span></span>
+            </span>
+          </span>
+        </button>
+      </div>
+      <div class="film-meta reveal">
+        <span class="fm-t">AIN Hire — your AI-powered hiring assistant</span>
+        <span class="fm-d">1:41 · One position, 481 applicants, four assistants</span>
+      </div>
+      <div class="chapters reveal" id="chapters">
+        <button class="ch" type="button" data-t="14"><span class="t">0:14</span>JD Assistant</button>
+        <button class="ch" type="button" data-t="31"><span class="t">0:31</span>Screening &amp; Interview</button>
+        <button class="ch" type="button" data-t="56"><span class="t">0:56</span>The 97 &rarr; 69 moment</button>
+        <button class="ch" type="button" data-t="60"><span class="t">1:00</span>Report Assistant</button>
+        <button class="ch" type="button" data-t="71"><span class="t">1:11</span>Talent Assistant</button>
+      </div>
+      <p class="film-note reveal">Filmed inside our showcase workspace. The applicants are synthetic and labelled as such; the screens, the scores, and the arithmetic behind them are the product's own.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATS ===================== -->
+<section class="block">
+  <div class="wrap">
+    <div class="stats reveal">
+      <div class="st"><div class="st-n">One sentence <span>&rarr; a live role</span></div><div class="st-d">Type &ldquo;Customer Service Officer, Bandung branch.&rdquo; AIN drafts the description, the skills, the prerequisites, and every stage an applicant passes through. Nothing publishes until you approve it.</div></div>
+      <div class="st"><div class="st-n"><span>481</span> CVs, all read</div><div class="st-d">Not a sample. Every application is scored component by component against the weights you set before the posting went out.</div></div>
+      <div class="st"><div class="st-n">Every number <span>opens</span></div><div class="st-d">Behind each score is a quoted line from the candidate's own CV or interview, with the skill it maps to and the limits of the evidence.</div></div>
+      <div class="st"><div class="st-n"><span>AI-powered</span>, human-decided</div><div class="st-d">The assistants read, score, and write. Shortlist, reject, hire, promote &mdash; all human, all with a recorded reason.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOUR ASSISTANTS (+ why) ===================== -->
+<section class="block" id="assistants">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow center" style="justify-content:center;">The product</div>
+      <h2>Four assistants,<br>named for what they do</h2>
+      <p>When one posting draws thousands of applicants, screening becomes triage. Each assistant takes something you already write and returns something you already need &mdash; and shows its work on the way.</p>
+    </div>
+
+    <div class="shift-lite reveal">
+      <div class="sl">
+        <div class="sl-label">Hiring today</div>
+        <ul>
+          <li>Recruiters read a fraction of the CVs that arrive.</li>
+          <li>Criteria shift between reviewers, and between weeks.</li>
+          <li>A gap in a CV quietly becomes a low score.</li>
+          <li>Six months later, nobody can reconstruct why a candidate was cut.</li>
+        </ul>
+      </div>
+      <div class="sl after">
+        <div class="sl-label">Hiring with AIN Hire</div>
+        <ul>
+          <li>Every applicant is read against the same published criteria.</li>
+          <li>Criteria are frozen per version, so a round stays comparable end to end.</li>
+          <li>Missing evidence is flagged for review, never scored as a zero.</li>
+          <li>Every score keeps its quote, and every decision keeps its reason.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="asst reveal d1">
+
+      <div class="ac">
+        <div class="ac-n">Assistant <b>one</b></div>
+        <div class="ac-t">JD Assistant</div>
+        <div class="ac-lead">You describe the role in a sentence. AIN drafts the whole hiring instrument &mdash; and it can't go live until a human signs it off.</div>
+        <div class="io">
+          <div class="r"><div class="k">You give</div><div class="v">&ldquo;Customer Service Officer, Bandung branch.&rdquo;</div></div>
+          <div class="r"><div class="k">You get</div><div class="v">Job description &middot; skills &middot; prerequisite questions &middot; the full applicant pipeline <em>&mdash; as an editable draft</em></div></div>
+        </div>
+        <ul class="ev">
+          <li>Weight each competency yourself &mdash; the showcase role runs <b>Customer empathy 30</b>, <b>Communication 25</b>, <b>Problem solving 20</b>, <b>Process discipline 15</b>, <b>Data literacy 10</b>.</li>
+          <li>Those numbers bind every judgement that follows, and they are fixed <b>before the first CV arrives</b>.</li>
+          <li>Draft &rarr; review &rarr; approval &rarr; publish, every transition audited. Publishing produces a version-pinned job URL and a printable QR, so an edit later never invalidates a printed poster.</li>
+        </ul>
+      </div>
+
+      <div class="ac">
+        <div class="ac-n">Assistant <b>two</b></div>
+        <div class="ac-t">Screening &amp; Interview Assistant</div>
+        <div class="ac-lead">The part that doesn't scale by hand: reading thousands of CVs, then interviewing the strongest without booking a single room.</div>
+        <div class="io">
+          <div class="r"><div class="k">You give</div><div class="v">Five interview questions, each mapped to the skill it tests <em>(plus an optional written assessment)</em></div></div>
+          <div class="r"><div class="k">You get</div><div class="v">Every applicant scored, ranked, and quotable &mdash; CV and interview combined under your weights</div></div>
+        </div>
+        <ul class="ev">
+          <li><b>481</b> applicants, <b>481</b> CVs read. Four components &mdash; experience fit, skill match, domain fit, impact evidence &mdash; each with its own weight.</li>
+          <li>Candidates interview on their own phone, in Bahasa Indonesia, whenever they're ready. Answers are transcribed server-side and scored against <b>anchored levels</b>, never impressions.</li>
+          <li>Missing evidence is a <b>review state, not a zero</b> &mdash; in the showcase round, <b>455</b> screened with full evidence, <b>26</b> flagged for a recruiter, <b>0</b> scored without a source.</li>
+        </ul>
+      </div>
+
+      <div class="ac gold">
+        <div class="ac-n">Assistant <b>three</b></div>
+        <div class="ac-t">Report Assistant</div>
+        <div class="ac-lead">The funnel, the drop-offs, and the evidence coverage &mdash; asked for in plain words and answered in the shape the meeting needs.</div>
+        <div class="io">
+          <div class="r"><div class="k">You give</div><div class="v">&ldquo;Summarise this month's funnel and where candidates drop out.&rdquo;</div></div>
+          <div class="r"><div class="k">You get</div><div class="v">A written analysis, generated server-side from the same numbers on your screen &mdash; as PDF, slides, or a web page</div></div>
+        </div>
+        <ul class="ev">
+          <li>The showcase funnel, live: Application <b>481</b> &rarr; CV screening <b>481</b> &rarr; Interview <b>38</b> &rarr; Decision <b>9</b>.</li>
+          <li>It names the steepest fall rather than making you find it &mdash; &ldquo;the steepest fall is CV screening to interview, where <b>443</b> stop.&rdquo;</li>
+          <li>Hiring funnel, evidence coverage, score distribution, and decisions &mdash; one document, ready to send.</li>
+        </ul>
+      </div>
+
+      <div class="ac gold">
+        <div class="ac-n">Assistant <b>four</b></div>
+        <div class="ac-t">Talent Assistant</div>
+        <div class="ac-lead">Every strong candidate you didn't hire is still evidence. Ask your talent pool a question and it answers against the same rules.</div>
+        <div class="io">
+          <div class="r"><div class="k">You give</div><div class="v">&ldquo;Who else fits a Relationship Officer in Bandung?&rdquo;</div></div>
+          <div class="r"><div class="k">You get</div><div class="v">Ranked candidates from the pool, each with the evidence behind the match</div></div>
+        </div>
+        <ul class="ev">
+          <li>Wrong fit for one role is often a good fit for another &mdash; Lukman surfaces at <b>55</b> for Relationship Officer, Bandung and <b>50</b> for Telesales Officer, Jakarta.</li>
+          <li>Same fairness rule everywhere: <b>a stage that has not run is not counted as zero.</b></li>
+          <li>Works for internal mobility too &mdash; employees nominated from the pool are reported as ready now, ready with support, development needed, or evidence insufficient.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WORKED EXAMPLE ===================== -->
+<section class="block" id="example">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow center" style="justify-content:center;">One hire, end to end</div>
+      <h2>A 97 that doesn't<br>survive the interview</h2>
+      <p>Lukman Sinaga's CV came second out of 481. His interview said something else &mdash; and the platform shows you exactly where the number moved, and why.</p>
+    </div>
+    <div class="chain reveal d1">
+      <div class="cl">
+        <div class="cl-k">Step 1 &middot; CV&ndash;Role Match</div>
+        <div class="cl-n">97</div>
+        <div class="cl-s">Four components, your weights, read straight from the CV.</div>
+        <div class="rows">
+          <div class="rr"><span>Experience fit</span><span class="w">&times;30</span><span class="n">96</span><span class="track"><i style="width:96%"></i></span></div>
+          <div class="rr"><span>Skill match</span><span class="w">&times;30</span><span class="n">98</span><span class="track"><i style="width:98%"></i></span></div>
+          <div class="rr"><span>Domain fit</span><span class="w">&times;20</span><span class="n">95</span><span class="track"><i style="width:95%"></i></span></div>
+          <div class="rr"><span>Impact evidence</span><span class="w">&times;20</span><span class="n">99</span><span class="track"><i style="width:99%"></i></span></div>
+        </div>
+        <div class="cl-s" style="margin-top:16px;">Second of 481 on the CV alone. &ldquo;Lihat bukti&rdquo; on the impact score opens the quoted line: CV &middot; Work experience, line 4.</div>
+      </div>
+      <div class="cl">
+        <div class="cl-k">Step 2 &middot; Structured interview</div>
+        <div class="cl-n">55</div>
+        <div class="cl-s">Recorded on his own phone, transcribed server-side, scored per question&ndash;skill mapping.</div>
+        <div class="rows">
+          <div class="rr"><span>Customer empathy &mdash; level 3/5</span><span class="w">&times;40</span><span class="n">3</span><span class="track"><i style="width:60%"></i></span></div>
+          <div class="rr"><span>Communication &mdash; level 3/5</span><span class="w">&times;35</span><span class="n">3</span><span class="track"><i style="width:60%"></i></span></div>
+          <div class="rr"><span>Problem solving &mdash; level 2/5</span><span class="w">&times;25</span><span class="n">2</span><span class="track"><i style="width:40%"></i></span></div>
+        </div>
+        <div class="cl-s" style="margin-top:16px;">Anchored levels, not impressions. Every level keeps the verbatim quote it was awarded for, and weak audio goes to a human reviewer instead of scoring low.</div>
+      </div>
+      <div class="cl final">
+        <div class="cl-k">Step 3 &middot; Combined</div>
+        <div class="cl-n">69</div>
+        <div class="cl-s">97 at 33% + 55 at 67% &mdash; the stage weights the company set, applied the same way to all 481.</div>
+        <div class="rows">
+          <div class="rr"><span>CV evidence</span><span class="w">33%</span><span class="n">97</span><span class="track"><i style="width:97%"></i></span></div>
+          <div class="rr"><span>Interview evidence</span><span class="w">67%</span><span class="n">55</span><span class="track"><i style="width:55%"></i></span></div>
+        </div>
+        <div class="cl-s" style="margin-top:16px;">Strong on paper. Not for this role &mdash; and you can put that sentence in front of the candidate, the hiring manager, or an auditor with the evidence attached.</div>
+      </div>
+    </div>
+    <div class="verdict reveal">
+      <div>
+        <div class="vt"><span class="d"></span>&ldquo;Not recommended to advance&rdquo; &mdash; written by a recruiter, not by the model</div>
+        <div class="vd">The platform produces the number, the components, and the quotes. A person reads them and makes the call, with a reason that becomes part of an append-only record. Six months later that record still reconstructs the decision &mdash; including the fact that the CV was excellent.</div>
+      </div>
+      <div class="alt">
+        <div class="alt-t">And he doesn't disappear</div>
+        <div class="alt-r"><span>Relationship Officer &middot; Bandung</span><b>55</b></div>
+        <div class="alt-r"><span>Telesales Officer &middot; Jakarta</span><b>50</b></div>
+        <div class="vd" style="margin-top:14px;">The Talent Assistant carries the same evidence into other open roles, so a no here isn't a dead end for a candidate you spent 481 CVs finding.</div>
+      </div>
+    </div>
+    <div class="disc reveal">
+      <b>What's real in this example:</b> Lukman is a synthetic candidate in our showcase workspace, and we label him as one. His CV score of 97, his rank, the quoted evidence line, and the &ldquo;not recommended to advance&rdquo; outcome are actual rows in the product. The interview breakdown &mdash; which competencies carried which weight, and the anchored levels behind the 55 &mdash; is an illustrative reconstruction, chosen so the arithmetic checks out end to end. On your own position, you'd see your real breakdown instead.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HOW IT RUNS (candidate + recruiter) ===================== -->
+<section class="block" id="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow center" style="justify-content:center;">Both sides of the hire</div>
+      <h2>A phone for the candidate,<br>a workspace for the recruiter</h2>
+      <p>The candidate journey runs entirely on a phone browser, in Bahasa Indonesia. The recruiter side does the reading, the transcribing, and the bookkeeping &mdash; and hands every judgement back to a person.</p>
+    </div>
+    <div class="sides reveal d1">
+
+      <div class="side">
+        <div class="side-head">
+          <div class="side-ico"><svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 5.5h3"/><path d="M9 12h6M9 15.5h4"/></svg></div>
+          <div><div class="side-tag">The candidate</div><div class="side-title">Apply first, prove it in the flow</div></div>
+        </div>
+        <div class="side-lead">No app, no account wall, and a real alternative path when the standard route doesn't fit.</div>
+        <ol>
+          <li><b>Open the job.</b> Every published position gets a public page with its own URL and a printable QR, pinned to the version it was published under.</li>
+          <li><b>Apply in one pass.</b> Profile, prerequisite answers, purpose-specific consent, and a private CV upload &mdash; one form, no account creation in front of it.</li>
+          <li><b>Interview on your own phone.</b> Questions written by the recruiters, answered in turns of up to sixty seconds, transcribed server-side and scored against your weights.</li>
+          <li><b>Ask for another route.</b> When the device, the connection, or an accessibility need makes that unsuitable, request a phone interview, a written response, or an assisted session &mdash; resolved by a recruiter with a recorded reason.</li>
+          <li><b>Check status any time.</b> A six-digit email code &mdash; hashed, single-use, rate-limited, ten-minute expiry &mdash; opens a status page. Stage labels only.</li>
+        </ol>
+        <div class="fine">Consent is recorded per purpose, not as one blanket tick. Video is separate from audio and optional &mdash; declining it leaves a genuine audio-only path, not a degraded one. Candidates never see scores, rank, or cross-employer data.</div>
+      </div>
+
+      <div class="side rec">
+        <div class="side-head">
+          <div class="side-ico"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3h-3zM20 14v6h-3"/></svg></div>
+          <div><div class="side-tag">The recruiter</div><div class="side-title">Built for thousands of applicants</div></div>
+        </div>
+        <div class="side-lead">Recruiters define the role, approve what publishes, and make every call that affects a candidate.</div>
+        <ol>
+          <li><b>Position &amp; role blueprint.</b> A position owns its job description, criteria, and applicants. Blueprint versions are immutable; the next round is a duplicate with a clean applicant set.</li>
+          <li><b>AI drafts, humans approve.</b> Drafting is AI; draft &rarr; review &rarr; approval &rarr; publish is not, and every transition is audited.</li>
+          <li><b>Top-N gate, with a reason.</b> Preview and confirm the top 100, 500, 1,000, 2,000, or a custom cut. The confirmation is audited and advances a stage &mdash; it never rejects anyone on its own.</li>
+          <li><b>Interview kit.</b> Author questions, map each to the skills it tests, set the mapping weight. Server-side transcription produces the scoring text; a browser note can't bypass it.</li>
+          <li><b>Review queue for weak audio.</b> If transcription returns nothing usable, a reviewer replays, retries, or adds a correction as a new revision. Scoring resumes only once the text is real.</li>
+          <li><b>Shortlist, handoff, sign-off.</b> Decisions are individual and carry reasons. Shortlisted candidates reach the hiring manager through a recipient-bound, expiring, one-time link.</li>
+        </ol>
+        <div class="fine">CV&ndash;Role Match runs four editable components, with trajectory and stability reported as a factual flag rather than folded into the score. Internal mobility uses the same evidence rules, reported in readiness language instead of pass or fail.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GOVERNANCE ===================== -->
+<section class="block" id="governance">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow center" style="justify-content:center;">Responsible AI</div>
+      <h2>Defensible by design,<br>not by promise</h2>
+      <p>Hiring decisions get challenged. AIN Hire is built so you can show exactly how one was reached &mdash; and so the AI never makes the final call.</p>
+    </div>
+    <div class="gov reveal d1">
+      <div class="gv">
+        <div class="gv-t"><span class="d"></span>Decision support, not decision making</div>
+        <div class="gv-d">AI extracts and organizes job-related evidence. It cannot make a final shortlist, rejection, hire, promotion, or rotation decision. Human decisions and overrides require reasons and create append-only revisions.</div>
+      </div>
+      <div class="gv">
+        <div class="gv-t"><span class="d"></span>Consent, versioned per purpose</div>
+        <div class="gv-d">Consent is recorded per person, case, purpose, timestamp, and channel &mdash; CV processing, audio, video, and identity are separate records. Withdrawing one writes a new revision instead of overwriting history.</div>
+      </div>
+      <div class="gv">
+        <div class="gv-t"><span class="d"></span>Missing evidence isn't a zero</div>
+        <div class="gv-d">When a CV or an answer doesn't evidence a requirement, the result is an explicit review state. Evidence confidence describes how well a claim is supported &mdash; not how truthful or suitable a person is.</div>
+      </div>
+      <div class="gv">
+        <div class="gv-t"><span class="d"></span>Retention and data rights</div>
+        <div class="gv-d">Candidates can request access, correction, consent withdrawal, or deletion, and deletion runs across every case. Raw identity documents and raw interview video are scheduled for deletion by default.</div>
+      </div>
+    </div>
+    <div class="never reveal">
+      <div class="never-t">Never inferred, never ranked on</div>
+      <div class="never-list">
+        <span>Emotion</span><span>Honesty as a trait</span><span>Confidence as personality</span><span>Mental or psychological state</span><span>Cultural fit</span><span>Protected characteristics</span><span>Gaze-based &ldquo;cheating&rdquo;</span>
+      </div>
+      <div class="never-d">What gets scored instead is what the candidate actually said against a defined, job-related scenario &mdash; with the quote, the skill it maps to, and the limits of the evidence attached. Identity verification never contributes to ranking.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA (+ where it fits) ===================== -->
+<section class="block" id="fit" style="padding-top:40px;padding-bottom:0;">
+  <div class="wrap">
+    <div class="fit reveal" style="margin-bottom:64px;">
+      <div class="ft">
+        <div class="ft-t">High-volume external hiring</div>
+        <div class="ft-d">Frontline, field, and branch roles where one posting draws thousands of applicants and a small team has to cover far more CVs than it can read.</div>
+      </div>
+      <div class="ft">
+        <div class="ft-t">Internal mobility</div>
+        <div class="ft-d">Moving people you already employ, judged on the same evidence rules but reported in readiness language rather than pass or fail.</div>
+      </div>
+      <div class="ft">
+        <div class="ft-t">Hiring that must be defensible</div>
+        <div class="ft-d">Processes that stay consistent, documented, and explainable months later &mdash; to an auditor, to a works council, or to the candidate who was turned down.</div>
+      </div>
+    </div>
+  </div>
+  <div class="cta reveal">
+    <img class="cta-mark" src="assets/anvaya-icon.png" alt="">
+    <h2>See the four assistants<br>on one of your roles</h2>
+    <p>Send us a position you're hiring for now. We'll configure it with your criteria, your weights, and your interview questions &mdash; then walk the whole chain with you, from the sentence you type to the report you'd take into the meeting.</p>
+    <div class="cta-row">
+      <button class="btn btn-primary" data-cta>Request a Demo
+        <svg class="arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <a class="btn btn-ghost" href="https://ain-hire.anvaya.co.id/" target="_blank" rel="noopener">Open AIN Hire
+        <svg class="ext" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16L18 6M18 6h-7M18 6v7"/></svg>
+      </a>
+    </div>
+    <div class="proto">
+      <span class="d"></span>
+      <span>AIN Hire is part of <a href="index.html#platform">AIN People</a> and shares the orchestration, integrations, memory, and governance layer that runs the rest of the AIN platform. The workspace at <a href="https://ain-hire.anvaya.co.id/" target="_blank" rel="noopener">ain-hire.anvaya.co.id</a> is live; the large applicant sets inside it are clearly labelled synthetic data, there to show high-volume operations rather than to claim real candidates.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="fb-row"><img src="assets/anvaya-icon.png" alt="Anvaya"><span class="word">Anvaya</span></div>
+        <p>PT Anvaya Inteligensia Nusantara<br>Connecting Intelligence Across Nusantara</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Platform</h4><a href="index.html#platform">AIN People</a><a href="hire.html">AIN Hire</a><a href="index.html#platform">AIN Finance</a><a href="index.html#platform">AIN Legal</a><a href="index.html#platform">AIN IoT</a><a href="index.html#platform">AIN Consulting</a></div>
+        <div class="foot-col"><h4>AIN Hire</h4><a href="https://ain-hire.anvaya.co.id/" target="_blank" rel="noopener">Open the platform</a><a href="#film">Watch the film</a><a href="#assistants">Four assistants</a><a href="#example">One hire, end to end</a><a href="#how">Both sides of the hire</a><a href="#governance">Responsible AI</a></div>
+        <div class="foot-col"><h4>Get started</h4><a href="#" data-cta>Request a Demo</a><a href="#" data-cta>Talk to Us</a></div>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span class="legal">© 2026 PT Anvaya Inteligensia Nusantara. All rights reserved.</span>
+      <span class="legal">Connecting Intelligence Across Nusantara</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const nav=document.getElementById('nav');
+  const onScroll=()=>{ nav.classList.toggle('scrolled', scrollY>40); };
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:0.16, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* ---- Self-hosted film: poster stays until the visitor asks for it ---- */
+  const frame=document.getElementById('filmFrame');
+  const video=document.getElementById('filmVideo');
+  const play=document.getElementById('filmPlay');
+  const chapters=[...document.querySelectorAll('#chapters .ch')];
+
+  const startFilm=(at)=>{
+    if(!video) return;
+    frame.classList.add('playing');
+    video.controls=true;
+    if(video.preload==='none') video.preload='auto';
+    if(typeof at==='number'){
+      const seek=()=>{ try{ video.currentTime=at; }catch(e){} };
+      if(video.readyState>=1) seek(); else video.addEventListener('loadedmetadata',seek,{once:true});
+    }
+    /* the class fades it out; the timeout guarantees it's gone even if the
+       transition never runs (throttled/background tabs freeze the clock) */
+    setTimeout(()=>{ if(frame.classList.contains('playing')) play.hidden=true; },500);
+    const p=video.play();
+    if(p&&p.catch) p.catch(()=>{ video.controls=true; });
+  };
+
+  if(play) play.addEventListener('click',()=>startFilm(0));
+  if(video) video.addEventListener('play',()=>frame.classList.add('playing'));
+
+  chapters.forEach(b=>{
+    b.addEventListener('click',()=>{
+      const t=parseInt(b.dataset.t,10);
+      startFilm(t);
+      chapters.forEach(o=>o.setAttribute('aria-current', o===b ? 'true':'false'));
+      frame.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  });
+
+  /* keep the chapter pills in step with playback */
+  if(video){
+    video.addEventListener('timeupdate',()=>{
+      const t=video.currentTime;
+      let active=null;
+      chapters.forEach(b=>{ if(t>=parseInt(b.dataset.t,10)) active=b; });
+      chapters.forEach(o=>o.setAttribute('aria-current', o===active ? 'true':'false'));
+    });
+  }
+
+  document.querySelectorAll('[data-cta]').forEach(b=>{
+    b.addEventListener('click', e=>{
+      if(b.tagName==='A') e.preventDefault();
+      window.location.href='demo.html';
+    });
+  });
+})();
+</script>
+<script src="contours.js"></script>
+</body>
+</html>
